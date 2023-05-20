@@ -1,0 +1,96 @@
+<svg version="1.1" baseProfile="full" width="300" height="200" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+    <filter id="filter">
+        <feSpecularLighting result="specOut" specularExponent="10" lighting-color="#999999">
+            <fePointLight x="0" y="0" z="100">
+                <animate attributeName="x" attributeType="XML" values="0;10;0" begin="0s" dur="10s" fill="freeze"
+                    repeatCount="indefinite" />
+                <animate attributeName="y" attributeType="XML" values="0;20;0" begin="0s" dur="20s" fill="freeze"
+                    repeatCount="indefinite" />
+            </fePointLight>
+        </feSpecularLighting>
+        <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" />
+    </filter>
+    <rect x="0" y="0" rx="10" height="100%" width="100%" fill="rgb(188, 212, 242)" opacity=".5"
+        class="card-background" />
+    <g class="data-card-title">
+        <text class="data-title" x="50" y="32">国际足联发放第三期被拖欠工资球员资助，预计225人获400万美元</text>
+        <image x="20" y="12" width="24" height="24"
+            href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAALVBMVEUAAAAUFBTV1dU8PDxcXFzu7u4pKSmBgYGUlJSioqJvb29lZWW8vLypqakLCwslKJXOAAAAD3RSTlPd3/jj6Pzi7O/x6un18t7XL9mxAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAQklEQVQYlZ2PuQ0AIAwDyQdJePYfl9qIAuHSurPkUv6yzkJUKxSULZESd0WpzUBJxvADYe64y8YodbNAiYgePtyyAYOtAO4tbK/oAAAAAElFTkSuQmCC" />
+        <line x1="20" y1="40" x2="280" y2="40" stroke="black" stroke-width="2" />
+    </g>
+    <g class="data-card-body">
+        <image x="20" y="45" width="110" height="72" class="data-body-pic"
+            href="https://nettools1.oxyry.com/image?url=https%3A%2F%2Fs3.ifanr.com%2Fwp-content%2Fuploads%2F2023%2F05%2FTitle.jpg" />
+        <text class="data-date" x="20" y="125">2099年12月31日23:59</text>
+        <foreignObject x="140" y="45" width="140" height="135">
+            <div xmlns="http://www.w3.org/1999/xhtml" class="data-body">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Sed mollis mollis mi ut ultricies. Nullam magna ipsum,
+                porta vel dui convallis, rutrum imperdiet eros. Aliquam
+                erat volutpat.
+            </div>
+        </foreignObject>
+    </g>
+    <foreignObject x="20" y="130" width="110" height="40" class="data-link">
+        <a xmlns="http://www.w3.org/1999/xhtml" href="https://www.baidu.com" target="_blank"
+            class="data-link-a">https://www.baidu.com</a>
+    </foreignObject>
+    <g class="tip">
+        <text x="20" y="160">右键-“在新标签页中打开”</text>
+        <text x="20" y="171">来打开可以操作的图像</text>
+    </g>
+    <style>
+        .tip {
+            font-size: 10px;
+        }
+
+        .data-body {
+            font-size: 16px;
+            height: 100%;
+            width: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+        }
+
+        .data-link {
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 14px;
+            user-select: all;
+        }
+
+        .data-body::-webkit-scrollbar {
+            width: 3px;
+            height: 8px;
+            background-color: #00000000;
+        }
+
+        .data-body::-webkit-scrollbar-thumb {
+            background: #6b6b6b;
+            border-radius: 1px;
+        }
+
+        .data-title {
+            font-size: 20px;
+        }
+
+        .data-date {
+            font-size: 10px;
+        }
+
+        * {
+            user-select: none;
+        }
+
+        .card-background {
+            stroke: #6b6b6b;
+            stroke-opacity: 1;
+            stroke-width: 1px;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: url(#filter);
+        }
+    </style>
+</svg>
