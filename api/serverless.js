@@ -1,4 +1,3 @@
-"use strict";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -7,7 +6,7 @@ import Fastify from "fastify";
 const app = Fastify({
     logger: true,
 });
-app.register(import("../api"));
+app.register(import("../api.js"));
 
 export default async (req, res) => {
     await app.ready();

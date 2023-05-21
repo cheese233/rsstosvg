@@ -30,7 +30,6 @@ const parseRssFeed = async (url, max = 0) => {
     let getBase64Buffer = new CacheList();
     while (feed = feedparser.read()) {
         const FaviconUrl = (new URL(feed.link)).origin;
-        console.log(FaviconUrl)
         const FaviconUrlDownload = "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(FaviconUrl);
         let favicon = getBase64Buffer.get(FaviconUrl);
         if (favicon == undefined) {
@@ -100,7 +99,6 @@ const getSvg = async (rssUrl, JSONFeedUrl, config) => {
     let svg = await svgsonParse(xml);
     const svgFind = (className) => svg.children.find(element => element.attributes.class == className);
     let rss = (await parseRssFeed(rssUrl, 1))[0];
-    console.log(rss)
     let cardtitle = svgFind("data-card-title");
     for (let element of cardtitle.children) {
         if (element.name == "image") {
