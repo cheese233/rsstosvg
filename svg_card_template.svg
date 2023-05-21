@@ -14,7 +14,12 @@
     <rect x="0" y="0" rx="10" height="100%" width="100%" fill="rgb(188, 212, 242)" opacity=".5"
         class="card-background" />
     <g class="data-card-title">
-        <text class="data-title" x="50" y="32">国际足联发放第三期被拖欠工资球员资助，预计225人获400万美元</text>
+        <defs>
+            <path d="M 0 32 l 250 0" id="textpath" />
+        </defs>
+        <text class="data-title" x="50" y="32">
+            <textPath href="#textpath">国际足联发放第三期被拖欠工资球员资助，预计225人获400万美元</textPath>
+        </text>
         <image x="20" y="12" width="24" height="24"
             href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAALVBMVEUAAAAUFBTV1dU8PDxcXFzu7u4pKSmBgYGUlJSioqJvb29lZWW8vLypqakLCwslKJXOAAAAD3RSTlPd3/jj6Pzi7O/x6un18t7XL9mxAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAQklEQVQYlZ2PuQ0AIAwDyQdJePYfl9qIAuHSurPkUv6yzkJUKxSULZESd0WpzUBJxvADYe64y8YodbNAiYgePtyyAYOtAO4tbK/oAAAAAElFTkSuQmCC" />
         <line x1="20" y1="40" x2="280" y2="40" stroke="black" stroke-width="2" />

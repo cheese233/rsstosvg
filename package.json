@@ -12,10 +12,12 @@
     "@fastify/static": "^6.10.1",
     "axios": "^1.4.0",
     "dateformat-util": "^1.0.5",
+    "dotenv": "^16.0.3",
     "fastify": "^4.17.0",
     "feedparser": "^2.2.10",
     "images": "^3.2.4",
     "marked": "^5.0.2",
+    "object-sizeof": "^2.6.1",
     "svgson": "^5.2.1"
   }
 }

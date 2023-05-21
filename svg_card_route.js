@@ -5,12 +5,15 @@ const {
 } = require('svgson');
 const dateformat = require('dateformat-util');
 const FeedParser = require('feedparser');
-const feedparser = new FeedParser();
+let feedparser = new FeedParser();
 const axios = require('axios').default;
 const images = require('images')
 const CacheList = require('./cache')
-const feedIcon = 'data:image/png;base64,' + Buffer.from(images.loadFromBuffer(fs.readFileSync("./Generic_Feed.png")).size(64).encode("png"), 'binary').toString('base64');
+const { sep } = require('path');
+const feedIcon = 'data:image/png;base64,' + Buffer.from(images.loadFromBuffer(fs.readFileSync("./Generic_Feed.png"))
+    .size(64).encode("png"), 'binary').toString('base64');
 const parseRssFeed = async (url, max = 0) => {
+    feedparser = new FeedParser();
     let feedXml = await axios({
         method: 'get',
         url: url,
@@ -19,28 +22,31 @@ const parseRssFeed = async (url, max = 0) => {
     feedXml.data.pipe(feedparser);
     await new Promise((resolve, reject) => {
         feedparser.on('readable', () => resolve())
-        feedparser.on('error', () => reject())
+        feedparser.on('error', () => { reject(); console.error("reject!") })
     });
     let feeds = [];
     let feed;
     let index = 0;
     let getBase64Buffer = new CacheList();
     while (feed = feedparser.read()) {
-        let favicon;
-        const FaviconUrl = (new URL(feed.link)).origin + "/favicon.ico";
-        favicon = getBase64Buffer.get(FaviconUrl);
-        try {
-            let faviconData = await axios({
-                method: 'get',
-                url: FaviconUrl,
-                responseType: 'arraybuffer'
-            });
-            favicon = 'data:' + faviconData.headers['Content-Type'] + ';base64,' + Buffer.from(faviconData.data, 'binary').toString('base64');
+        const FaviconUrl = (new URL(feed.link)).origin;
+        console.log(FaviconUrl)
+        const FaviconUrlDownload = "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(FaviconUrl);
+        let favicon = getBase64Buffer.get(FaviconUrl);
+        if (favicon == undefined) {
+            try {
+                let faviconData = await axios({
+                    method: 'get',
+                    url: FaviconUrlDownload,
+                    responseType: 'arraybuffer'
+                });
+                favicon = 'data:image/png;base64,' + Buffer.from(faviconData.data, 'binary').toString('base64');
+            }
+            catch (err) {
+                favicon = feedIcon;
+            }
+            getBase64Buffer.push(FaviconUrl, favicon);
         }
-        catch (err) {
-            favicon = feedIcon;
-        }
-        getBase64Buffer.push(FaviconUrl, favicon);
         let picture;
         const PictureUrl = feed.image.url;
         try {
@@ -70,9 +76,12 @@ const parseRssFeed = async (url, max = 0) => {
             }
         }
     }
+    getBase64Buffer.stop();
     return feeds;
 };
+// const svgCache = new CacheList(3600000);
 const getSvg = async (rssUrl, JSONFeedUrl, config) => {
+    const svgCache = new CacheList(1000, 125000, `.${sep}svgCache.json`);
     if (rssUrl) {
 
     }
@@ -82,24 +91,23 @@ const getSvg = async (rssUrl, JSONFeedUrl, config) => {
     if (config) {
 
     }
+    const rssCache = svgCache.get(rssUrl);
+    if (rssCache != undefined) {
+        svgCache.stop();
+        return rssCache;
+    }
     const xml = fs.readFileSync("svg_card_template.svg");
     let svg = await svgsonParse(xml);
     const svgFind = (className) => svg.children.find(element => element.attributes.class == className);
     let rss = (await parseRssFeed(rssUrl, 1))[0];
+    console.log(rss)
     let cardtitle = svgFind("data-card-title");
     for (let element of cardtitle.children) {
         if (element.name == "image") {
             element.attributes.href = rss.favicon;
         }
         else if (element.attributes.class == "data-title") {
-            let cardTitleValue;
-            if (rss.title.length > 9) {
-                cardTitleValue = rss.title.slice(0, 9).concat('...');
-            }
-            else {
-                cardTitleValue = rss.title;
-            }
-            element.children[0].value = cardTitleValue;
+            element.children[0].children[0].value = rss.title;
         }
     }
     let cardbody = svgFind("data-card-body");
@@ -123,7 +131,10 @@ const getSvg = async (rssUrl, JSONFeedUrl, config) => {
     let cardlink = svgFind("data-link").children[0];
     cardlink.children[0].value = rss.link;
     cardlink.attributes.href = rss.link;
-    return svgsonStringify(svg);
+    let svgOutput = svgsonStringify(svg);
+    svgCache.push(rssUrl, svgOutput, 15000);
+    svgCache.stop();
+    return svgOutput;
 }
 /**
  * @param {import('fastify').FastifyInstance} fastify  Encapsulated Fastify Instance
